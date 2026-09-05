@@ -126,7 +126,6 @@ Contiene las pruebas unitarias de la aplicación.
 ## Estructura JSON para un nuevo producto
 ```json
 {
-  "productoId": 1234,
   "nombreProducto": "Borrador Miga de pan",
   "stock": 100
 }
@@ -140,6 +139,6 @@ Contiene las pruebas unitarias de la aplicación.
   "nombreCliente": "Jose Rodrigo",
   "prioridad": "URGENTE",
   "cantidad": 1,
-  "productoId": 87654
+  "productoId": 1
 }
 ```
