@@ -24,6 +24,7 @@ public class Validador {
     public static boolean esNumeroPositivo(int numero) {
         return numero > 0;
     }
+
     public static boolean esPrioridadValida(String prioridad) {
         if (prioridad == null) {
             return false;
@@ -36,15 +37,6 @@ public class Validador {
         return false;
 
     }
-    public static boolean existePrioridad(Prioridad prioridad) {
-        for (Prioridad prioridadEnum : Prioridad.values()) {
-            if (prioridadEnum.name().equals(prioridad.name())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public static boolean esNitvalido(Integer numero) {
         if (numero == null){
