@@ -1,5 +1,6 @@
 package co.sgp.Models.Cliente;
 
+
 public class Cliente {
     private  final Integer NIT;
     private final String nombre;

@@ -1,44 +1,44 @@
 package co.sgp.Models.Pedido;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
+@Entity
 public class Pedido {
-    private static  Integer contador=1;
-    private Integer id;
-    private final Long productoId;
-    private final Integer NIT;
-    private final String nombreCliente;
-    private final Prioridad prioridad;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long pedidoId;
+    private Long productoId;
+    private Integer Nit;
+    private String nombreCliente;
+    private Prioridad prioridad;
     private Estado estado;
-    private final Integer cantidad;
+    private Integer cantidad;
 
+    public Pedido(){}
 
-    public Pedido(Long productoId, Integer NIT, String nombreCliente, Prioridad prioridad, Integer cantidad) {
+    public Pedido(Long pedidoId,Long productoId, Integer Nit, String nombreCliente, Prioridad prioridad, Integer cantidad) {
+        this.pedidoId = pedidoId;
         this.productoId = productoId;
-        this.NIT = NIT;
+        this.Nit = Nit;
         this.nombreCliente = nombreCliente;
         this.prioridad = prioridad;
         this.estado = Estado.PENDIENTE;
         this.cantidad = cantidad;
     }
 
-    public static Integer generarSiguienteId() {
-        return contador++;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
+    public Long getPedidoId() {
+        return pedidoId;
     }
 
     public Long getProductoId() {
         return productoId;
     }
 
-    public Integer getNIT() {
-        return NIT;
+    public Integer getNit() {
+        return Nit;
     }
 
     public String getNombreCliente() {

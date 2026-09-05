@@ -1,9 +1,19 @@
 package co.sgp.Models.Producto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Producto {
-    private final Long productoId;
-    private final String nombreProducto;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long productoId;
+    private String nombreProducto;
     private Integer stock;
+
+    public Producto() {}
 
     public Producto(Long productoId, String nombreProducto, Integer stock) {
         this.productoId = productoId;
@@ -11,9 +21,7 @@ public class Producto {
         this.stock = stock;
     }
 
-    public Long getProductoId() {
-        return productoId;
-    }
+    public Long getProductoId() {return productoId;}
 
     public String getNombreProducto() {
         return nombreProducto;
