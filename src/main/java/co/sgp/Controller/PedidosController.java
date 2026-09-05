@@ -5,7 +5,6 @@ import co.sgp.Services.PedidoService;
 import co.sgp.Models.Pedido.Pedido;
 
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,41 +24,30 @@ public class PedidosController {
         this.pedidoService = pedidoService;
     }
 
-    //Listado de productos / Buscar por ID de producto
-    @GetMapping
-    public ResponseEntity<?> listarPedidos(@RequestParam(required = false) Integer id) {
-        if (id != null) {
-            Pedido pedido = pedidoService.buscarPedido(id);
-            if (pedido != null) {
-                return ResponseEntity.ok().body(pedido);
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existe el pedido con id: " + id);
-        }
-        return ResponseEntity.ok().body(pedidoService.listaPedidos());
-    }
 
     //Método POST
 
-    // Crear Pedido
+    // Crear nuevo Pedido
     @PostMapping("/crear")
     public ResponseEntity<?> crearPedido(@RequestBody Pedido pedido) {
         try {
-            pedidoService.crearPedido(pedido);
-            return ResponseEntity.status(HttpStatus.CREATED).body(pedido);
+            Pedido pedidoACrear=pedidoService.crearPedido(pedido);
+            return ResponseEntity.status(HttpStatus.CREATED).body(pedidoACrear);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+
     }
 
     //Métodos PUT
 
-    //Método para Confirmar pedidos en estado PENDIENTE
-    @PutMapping("/{id}/confirmar")
-    public ResponseEntity<?> confirmarPedido(@PathVariable Integer id) {
+    //Confirmar pedidos en estado pendiente
+    @PutMapping("/{pedidoId}/confirmar")
+    public ResponseEntity<?> confirmarPedido(@PathVariable Long pedidoId) {
         try {
-            Pedido pedido = pedidoService.confirmarPedido(id);
+            Pedido pedido = pedidoService.confirmarPedido(pedidoId);
             return ResponseEntity.ok(pedido);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -68,11 +56,11 @@ public class PedidosController {
         }
     }
 
-    //Método para Cancelar pedidos
-    @PutMapping("/{id}/cancelar")
-    public ResponseEntity<?> cancelarPedido(@PathVariable Integer id) {
+    //Cancelar pedidos
+    @PutMapping("/{pedidoId}/cancelar")
+    public ResponseEntity<?> cancelarPedido(@PathVariable Long pedidoId) {
         try {
-            Pedido pedido = pedidoService.cancelarPedido(id);
+            Pedido pedido = pedidoService.cancelarPedido(pedidoId);
             return ResponseEntity.ok(pedido);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -81,12 +69,11 @@ public class PedidosController {
         }
     }
 
-
-    //Método para Despachar pedidos en estado Confirmado
-    @PutMapping("/{id}/despachar")
-    public ResponseEntity<?> despacharPedido(@PathVariable Integer id) {
+    //Despachar pedidos en estado confirmado
+    @PutMapping("/{pedidoId}/despachar")
+    public ResponseEntity<?> despacharPedido(@PathVariable Long pedidoId) {
         try {
-            Pedido pedido = pedidoService.despacharPedido(id);
+            Pedido pedido = pedidoService.despacharPedido(pedidoId);
             return ResponseEntity.ok(pedido);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -97,7 +84,21 @@ public class PedidosController {
 
     //Métodos GET
 
-    //Búsqueda de pedidos por estados
+    //Listado de pedidos / Buscar por ID de pedido
+    @GetMapping
+    public ResponseEntity<?> listarPedidos(@RequestParam(required = false) Long pedidoId) {
+        if (pedidoId != null) {
+            try {
+                Pedido pedido = pedidoService.buscarPedido(pedidoId);
+                return ResponseEntity.ok().body(pedido);
+            } catch (NoSuchElementException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            }
+        }
+        return ResponseEntity.ok().body(pedidoService.listaPedidos());
+    }
+
+    //Buscar pedidos por estado
     @GetMapping("/estado/{estado}")
     public ResponseEntity<?> listaEstado(@PathVariable String estado) {
         try {
@@ -110,48 +111,44 @@ public class PedidosController {
         }
     }
 
-    //Búsqueda de pedidos por prioridades
+    //Buscar pedidos por prioridad
     @GetMapping("/prioridad/{prioridad}")
     public ResponseEntity<?> listaPrioridad(@PathVariable String prioridad) {
         try {
             List<Pedido> pedidos = pedidoService.pedidosPorPrioridad(prioridad);
             return ResponseEntity.ok(pedidos);
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-     //Resumen de pedidos
+    //Resumen de pedidos
     @GetMapping("/resumen")
     public ResponseEntity<?> listaEstadoResumen() {
         try {
-            List<String> resumen =pedidoService.resumenPedidos();
+            List<String> resumen = pedidoService.resumenPedidos();
             return ResponseEntity.ok(resumen);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    //Mostrar pedidos en riesgo
+    //Pedidos en riesgo
     @GetMapping("/riesgo")
     public ResponseEntity<?> obtenerPedidosEnRiesgo() {
-        try {
-            List<Pedido> pedidosEnRiego=pedidoService.pedidosEnRiesgo();
-            return ResponseEntity.ok(pedidosEnRiego);
-        }catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        List<Pedido> pedidosEnRiego = pedidoService.pedidosEnRiesgo();
+        return ResponseEntity.ok(pedidosEnRiego);
     }
 
-    //Conocer qué pedido será atendido primero.
+   //Pedido que será atendido primero.
     @GetMapping("/siguiente")
     public ResponseEntity<?> obtenerSiguientePedido() {
         try {
-            Pedido pedidoSiguiente=pedidoService.pedidoSiguiente();
+            Pedido pedidoSiguiente = pedidoService.pedidoSiguiente();
             return ResponseEntity.ok(pedidoSiguiente);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
