@@ -38,7 +38,7 @@ Es una aplicación desarrollada con **Spring Boot** para administrar la informac
 | GET    | `/productos/stock/{valor}`         | Busqueda de productos por stock menor al valor digitado. |
 | GET    | `/productos/stock/agotado`         | Filtrar productos con stock agotado.                     |
 | PUT    | `/productos/actStock/{productoId}` | Actualizar stock de un producto.                         |
-| DELETE | `/productos/{productoId}`          | Elimina un producto existente.                           |
+| DELETE | `/productos/eliminar/{productoId}` | Elimina un producto existente.                           |
 
 
 ## Estructura del proyecto
